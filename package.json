@@ -1,0 +1,8 @@
+{
+  "name": "crazy-kitchen-courseware",
+  "version": "1.0.0",
+  "description": "胡闹厨房 · 沙特小学生一对一线上课 H5 互动课件",
+  "scripts": {
+    "dev": "node server.js"
+  }
+}
