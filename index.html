@@ -300,26 +300,70 @@
   #fbToast { position:absolute; bottom:90px; left:50%; transform:translateX(-50%); background:#3FA34D;
     color:#fff; font-weight:900; font-size:19px; padding:10px 34px; border-radius:999px; display:none; z-index:20; }
 
+  /* ===== 阿语全翻译开关 ===== */
+  .ar-t { display:none; direction:rtl; unicode-bidi:isolate; }
+  body.ar-on .ar-t { display:block; }
+  body.ar-on .ar-t.ar-i { display:inline; }
+  .ar-t.ltr-sep { direction:ltr; }
+  #arBtn { position:fixed; top:14px; right:14px; z-index:9999; border:none; cursor:pointer;
+    font-family:inherit; font-weight:800; font-size:15px; color:#fff; padding:9px 18px;
+    border-radius:999px; background:linear-gradient(#9B7EDE,#7C5CBF); box-shadow:0 4px 0 #5E4399;
+    transition:transform .12s, filter .12s; }
+  #arBtn:active { transform:scale(.94); }
+  #arBtn:hover { filter:brightness(1.08); }
+  body.ar-on #arBtn { background:linear-gradient(#3FBF5A,#2B8C40); box-shadow:0 4px 0 #1F6B30; }
+
+  /* ===== 全局 logo 水印（舞台内、页面之外，每页可见） ===== */
+  .logo { position:absolute; top:14px; left:20px; height:38px; width:auto; z-index:60;
+    pointer-events:none; filter:drop-shadow(0 2px 6px rgba(0,0,0,.30)); }
+
+  /* ===== 隐藏每页左上角时间标签 ===== */
+  .timepill { display:none; }
+
+  /* ===== P1 课前须知：按钮行 + 试音确认 ===== */
+  .notice-btns { display:flex; gap:16px; align-items:center; justify-content:center;
+    flex-wrap:wrap; margin-top:18px; }
+  #startBtn { margin-top:0; }
+  #sndOk { font-size:16px; font-weight:800; color:#2B7A37; margin-top:12px;
+    opacity:0; transition:opacity .4s; }
+
+  /* ===== 各页翻译块样式 ===== */
+  .chip-text { display:flex; flex-direction:column; gap:2px; }
+  .chip-ar { font-size:15px; color:#9A6234; font-weight:700; }
+  .wp-ex-text { flex:1; }
+  .gx-text { flex:1; }
+  .gr-ex .ex-ar { font-size:15px; color:#9A6234; font-weight:700; margin-top:4px; }
+  .oral-ar { font-size:15px; color:#9A6234; font-weight:700; margin-top:4px; }
+  .rp-lines { flex:1; display:flex; flex-direction:column; gap:4px; }
+  .rp-ar { font-size:16px; color:#9A6234; font-weight:700; }
+  .rp-step-ar { font-size:15px; color:#9A6234; font-weight:700; margin-top:2px; }
+  .quiz-q-ar { font-size:17px; color:#9A6234; font-weight:700; margin-top:6px; }
+  .sum-gram .ex-ar { font-size:14px; color:#9A6234; font-weight:700; margin-top:6px; }
+
   /* ===== 庆祝彩带 ===== */
   #confetti { position:absolute; inset:0; pointer-events:none; z-index:40; display:none; }
 </style>
 </head>
 <body>
 <div id="stage">
+<img class="logo" src="assets/img/logo.png" alt="51Talk">
 
   <!-- P1 课前通知页（全阿拉伯语） -->
   <section class="page" id="p1">
     <div class="notice-wrap">
       <div class="notice-title">مطبخ المرح</div>
-      <div class="notice-sub">قبل أن نبدأ الدرس، تأكّد من هذه الأشياء الخمسة:</div>
+      <div class="notice-sub">قبل أن نبدأ الدرس، تأكّد من هذه الأشياء الأربعة:</div>
       <div class="check-list">
-        <div class="check-item"><span class="num">1</span><p>شغِّل الميكروفون حتى أسمع صوتك جيدًا</p></div>
-        <div class="check-item"><span class="num">2</span><p>شغِّل الكاميرا حتى أراك يا بطل</p></div>
-        <div class="check-item"><span class="num">3</span><p>تأكّد من أن شبكة الإنترنت تعمل بشكل ممتاز</p></div>
-        <div class="check-item"><span class="num">4</span><p>اجلس في مكان هادئ ومناسب للدرس</p></div>
-        <div class="check-item"><span class="num">5</span><p>جهِّز قلمًا ودفترًا بجانبك</p></div>
+        <div class="check-item"><span class="num">🎤</span><p>تأكد من فتح الميكروفون والكاميرا</p></div>
+        <div class="check-item"><span class="num">🌐</span><p>تأكد من أن الإنترنت يعمل جيداً</p></div>
+        <div class="check-item"><span class="num">🤫</span><p>اجلس في مكان هادئ ومريح</p></div>
+        <div class="check-item"><span class="num">✏️</span><p>حضّر الأدوات المدرسية اللازمة</p></div>
       </div>
-      <button class="btn btn-orange" id="startBtn">أنا جاهز! هيّا نبدأ</button>
+      <div class="notice-btns">
+        <button class="btn btn-teal" id="sndTest" style="font-size:19px;padding:14px 34px">🔊 جرّب الصوت</button>
+        <button class="btn btn-orange" id="startBtn">أنا جاهز! هيّا نبدأ</button>
+      </div>
+      <p id="sndOk">✔ الصوت يعمل جيداً!</p>
     </div>
   </section>
 
@@ -332,13 +376,13 @@
       <div class="ice-ar">أهلًا يا طاهينا الصغير!</div>
       <div class="ice-en">Welcome to the Crazy Kitchen, little chef!</div>
       <div class="ice-chips">
-        <div class="ice-chip"><span>What's your name?</span>
+        <div class="ice-chip"><span class="chip-text">What's your name?<span class="ar-t chip-ar">ما اسمك؟</span></span>
           <button class="speak-btn" data-say="What's your name?"><i class="spk"></i>Listen</button></div>
-        <div class="ice-chip"><span>My name is ____.</span>
+        <div class="ice-chip"><span class="chip-text">My name is ____.&nbsp;<span class="ar-t chip-ar">اسمي هو...</span></span>
           <button class="speak-btn" data-say="My name is ..."><i class="spk"></i>Listen</button></div>
-        <div class="ice-chip"><span>How are you today?</span>
+        <div class="ice-chip"><span class="chip-text">How are you today?<span class="ar-t chip-ar">كيف حالك اليوم؟</span></span>
           <button class="speak-btn" data-say="How are you today?"><i class="spk"></i>Listen</button></div>
-        <div class="ice-chip"><span>I'm great! I'm ready to cook!</span>
+        <div class="ice-chip"><span class="chip-text">I'm great! I'm ready to cook!<span class="ar-t chip-ar">أنا بخير! أنا مستعد للطبخ!</span></span>
           <button class="speak-btn" data-say="I'm great! I'm ready to cook!"><i class="spk"></i>Listen</button></div>
       </div>
     </div>
@@ -384,7 +428,7 @@
     <div style="text-align:center"><span class="pagetag">اضرب الخلد! · Whack-a-Mole</span></div>
     <div class="mole-top">
       <div class="mole-prompt">اضغط على كلمة: <b id="moleWord">...</b></div>
-      <div class="mole-score">Score: <b id="moleScore">0</b> / 8</div>
+      <div class="mole-score">Score: <b id="moleScore">0</b> / 8<span class="ar-t ar-i ltr-sep"> · </span><span class="ar-t ar-i">النقاط</span></div>
     </div>
     <div class="mole-timer"><i id="moleBar"></i></div>
     <div id="moleGrid"></div>
@@ -423,13 +467,13 @@
       </div>
       <div class="gr-exs">
         <div class="card gr-ex"><img src="assets/img/oven.png" alt="">
-          <p>We <b class="hl">should</b> turn the oven on.</p>
+          <div class="gx-text"><p>We <b class="hl">should</b> turn the oven on.</p><p class="ar-t ex-ar">يجب أن نشغّل الفرن.</p></div>
           <button class="speak-btn" data-say="We should turn the oven on."><i class="spk"></i>Listen</button></div>
         <div class="card gr-ex"><img src="assets/img/sugar.png" alt="">
-          <p>You <b class="hl">should not</b> use too much sugar.</p>
+          <div class="gx-text"><p>You <b class="hl">should not</b> use too much sugar.</p><p class="ar-t ex-ar">لا ينبغي أن تستخدم الكثير من السكر.</p></div>
           <button class="speak-btn" data-say="You should not use too much sugar."><i class="spk"></i>Listen</button></div>
         <div class="card gr-ex"><img src="assets/img/flour.png" alt="">
-          <p><b class="hl">Should</b> I use flour in the mixture?</p>
+          <div class="gx-text"><p><b class="hl">Should</b> I use flour in the mixture?</p><p class="ar-t ex-ar">هل أستخدم الدقيق في الخليط؟</p></div>
           <button class="speak-btn" data-say="Should I use flour in the mixture?"><i class="spk"></i>Listen</button></div>
       </div>
     </div>
@@ -448,13 +492,13 @@
       </div>
       <div class="gr-exs">
         <div class="card gr-ex"><img src="assets/img/recipe.png" alt="">
-          <p>We <b class="hl">had better</b> check the recipe again.</p>
+          <div class="gx-text"><p>We <b class="hl">had better</b> check the recipe again.</p><p class="ar-t ex-ar">من الأفضل أن نراجع الوصفة مرة أخرى.</p></div>
           <button class="speak-btn" data-say="We had better check the recipe again."><i class="spk"></i>Listen</button></div>
         <div class="card gr-ex"><img src="assets/img/cookies.png" alt="">
-          <p>You <b class="hl">had better not</b> leave the cookies in the oven too long!</p>
+          <div class="gx-text"><p>You <b class="hl">had better not</b> leave the cookies in the oven too long!</p><p class="ar-t ex-ar">من الأفضل ألا تترك البسكويت في الفرن طويلًا!</p></div>
           <button class="speak-btn" data-say="You had better not leave the cookies in the oven too long!"><i class="spk"></i>Listen</button></div>
         <div class="card gr-ex"><img src="assets/img/bowl.png" alt="">
-          <p>You <b class="hl">had better not</b> make a mess!</p>
+          <div class="gx-text"><p>You <b class="hl">had better not</b> make a mess!</p><p class="ar-t ex-ar">من الأفضل ألا تصنع فوضى!</p></div>
           <button class="speak-btn" data-say="You had better not make a mess!"><i class="spk"></i>Listen</button></div>
       </div>
     </div>
@@ -478,7 +522,7 @@
           <h3>had better · تحذير</h3><p>تحذير قوي: من الأفضل... وإلا!</p>
         </button>
       </div>
-      <div class="sort-hud"><span>Sentence <b id="sortIdx">1</b> / 6</span><span>Score: <b id="sortScore">0</b></span></div>
+      <div class="sort-hud"><span>Sentence <b id="sortIdx">1</b> / 6<span class="ar-t ar-i ltr-sep"> · </span><span class="ar-t ar-i">الجملة</span></span><span>Score: <b id="sortScore">0</b><span class="ar-t ar-i ltr-sep"> · </span><span class="ar-t ar-i">النقاط</span></span></div>
       <div class="sort-msg" id="sortMsg"></div>
       <div class="oral-zone" id="oralZone">
         <div class="card oral-card"><p>Should I add the honey?</p><span class="hint">أجب بصوت عالٍ: Yes, you should!</span>
@@ -496,19 +540,19 @@
     <div class="rp-wrap">
       <div class="card rp-imgbox">
         <img id="rpImg" src="assets/img/chef.png" alt="step">
-        <div class="rp-stepword" id="rpStepWord">Step 1 / 5</div>
+        <div class="rp-stepword" id="rpStepWord">Step 1 / 5</div><div class="ar-t rp-step-ar" id="rpStepWordAr"></div>
       </div>
       <div class="rp-dialog">
         <div class="bubble teacher">
           <div class="who">المعلّم<i>الشيف</i></div>
-          <div class="line" id="rpTeacher">...</div>
+          <div class="rp-lines"><div class="line" id="rpTeacher">...</div><div class="line ar-t rp-ar" id="rpTeacherAr"></div></div>
           <div class="acts">
             <button class="speak-btn mini-btn" id="rpTListen"><i class="spk"></i>Listen</button>
           </div>
         </div>
         <div class="bubble student">
           <div class="who">أنت<i>الطاهي الصغير</i></div>
-          <div class="line" id="rpStudent">...</div>
+          <div class="rp-lines"><div class="line" id="rpStudent">...</div><div class="line ar-t rp-ar" id="rpStudentAr"></div></div>
           <div class="acts">
             <button class="speak-btn mini-btn" id="rpSListen"><i class="spk"></i>Slow</button>
             <button class="btn btn-orange mini-btn" id="rpSaid">قلتُها!</button>
@@ -552,7 +596,7 @@
       <div class="quiz-hint" id="quizHint"></div>
       <div class="quiz-opts" id="quizOpts"></div>
     </div>
-    <div class="quiz-hud">Question <b id="quizIdx">1</b> / 4 · Score: <b id="quizScore">0</b></div>
+    <div class="quiz-hud">Question <b id="quizIdx">1</b> / 4 · Score: <b id="quizScore">0</b><span class="ar-t ar-i ltr-sep"> · </span><span class="ar-t ar-i">السؤال / النقاط</span></div>
     <div class="quiz-end" id="quizEnd">
       <h2 id="quizEndTitle">رائع!</h2>
       <div class="stars" id="quizStars">★★★★</div>
@@ -603,17 +647,19 @@
   <canvas id="confetti"></canvas>
 </div>
 
+<button id="arBtn" title="إظهار / إخفاء الترجمة الكاملة">🌐 العربية</button>
+
 <script>
 /* ================= 数据 ================= */
 const WORDS = [
-  {en:"flour",     ph:"/ˈflaʊər/",    ar:"دقيق",          ex:"We need flour to make cookies.",           img:"assets/img/flour.png"},
-  {en:"butter",    ph:"/ˈbʌtər/",     ar:"زبدة",          ex:"Butter makes the cookies soft.",           img:"assets/img/butter.png"},
-  {en:"sugar",     ph:"/ˈʃʊɡər/",     ar:"سُكَّر",         ex:"You should not use too much sugar.",       img:"assets/img/sugar.png"},
-  {en:"honey",     ph:"/ˈhʌni/",      ar:"عَسَل",          ex:"Honey is sweet and yummy.",               img:"assets/img/honey.png"},
-  {en:"chocolate", ph:"/ˈtʃɔːklət/",  ar:"شوكولاتة",      ex:"I like chocolate in my cookies.",          img:"assets/img/chocolate.png"},
-  {en:"yogurt",    ph:"/ˈjoʊɡərt/",   ar:"زبادي",         ex:"Yogurt with banana is my favorite topping.", img:"assets/img/yogurt.png"},
-  {en:"topping",   ph:"/ˈtɒpɪŋ/",     ar:"طبقة التزيين",   ex:"The topping is on the pancakes.",          img:"assets/img/topping.png"},
-  {en:"recipe",    ph:"/ˈresəpi/",    ar:"وَصفة",          ex:"Follow the recipe step by step.",          img:"assets/img/recipe.png"}
+  {en:"flour",     ph:"/ˈflaʊər/",    ar:"دقيق",          ex:"We need flour to make cookies.",           exAr:"نحتاج إلى الدقيق لصنع البسكويت.", img:"assets/img/flour.png"},
+  {en:"butter",    ph:"/ˈbʌtər/",     ar:"زبدة",          ex:"Butter makes the cookies soft.",           exAr:"الزبدة تجعل البسكويت طريًّا.", img:"assets/img/butter.png"},
+  {en:"sugar",     ph:"/ˈʃʊɡər/",     ar:"سُكَّر",         ex:"You should not use too much sugar.",       exAr:"لا ينبغي أن تستخدم الكثير من السكر.", img:"assets/img/sugar.png"},
+  {en:"honey",     ph:"/ˈhʌni/",      ar:"عَسَل",          ex:"Honey is sweet and yummy.",               exAr:"العسل حلو ولذيذ.", img:"assets/img/honey.png"},
+  {en:"chocolate", ph:"/ˈtʃɔːklət/",  ar:"شوكولاتة",      ex:"I like chocolate in my cookies.",          exAr:"أحب الشوكولاتة في البسكويت.", img:"assets/img/chocolate.png"},
+  {en:"yogurt",    ph:"/ˈjoʊɡərt/",   ar:"زبادي",         ex:"Yogurt with banana is my favorite topping.", exAr:"الزبادي مع الموز هو طبقة التزيين المفضلة لدي.", img:"assets/img/yogurt.png"},
+  {en:"topping",   ph:"/ˈtɒpɪŋ/",     ar:"طبقة التزيين",   ex:"The topping is on the pancakes.",          exAr:"طبقة التزيين فوق فطائر البانكيك.", img:"assets/img/topping.png"},
+  {en:"recipe",    ph:"/ˈresəpi/",    ar:"وَصفة",          ex:"Follow the recipe step by step.",          exAr:"اتبع الوصفة خطوة بخطوة.", img:"assets/img/recipe.png"}
 ];
 const SORT = [
   {s:"We should turn the oven on.", t:"should"},
@@ -624,11 +670,11 @@ const SORT = [
   {s:"You had better not leave the cookies in the oven too long!", t:"better"}
 ];
 const RP = [
-  {t:"Welcome, little chef! Should we make cookies today?", s:"Yes, we should!", img:"assets/img/chef.png", step:"Step 1 · Say yes!"},
-  {t:"Great! What should I add first?", s:"You should add the flour and the butter.", img:"assets/img/bowl.png", step:"Step 2 · Mix it!"},
-  {t:"Should I use a lot of sugar?", s:"No! We should not use too much sugar. We had better use honey!", img:"assets/img/honey.png", step:"Step 3 · Sweet idea!"},
-  {t:"The oven is cold. What should we do?", s:"We had better preheat the oven first.", img:"assets/img/oven.png", step:"Step 4 · Into the oven!"},
-  {t:"The cookies are ready! They smell great!", s:"Yay! We should share the cookies with my family!", img:"assets/img/cookies.png", step:"Step 5 · Cookies ready!"}
+  {t:"Welcome, little chef! Should we make cookies today?", s:"Yes, we should!", img:"assets/img/chef.png", step:"Step 1 · Say yes!", tAr:"أهلًا يا طاهيَنا الصغير! هل نصنع البسكويت اليوم؟", sAr:"نعم، يجب علينا ذلك!", stepAr:"الخطوة ١ · قُل نعم!"},
+  {t:"Great! What should I add first?", s:"You should add the flour and the butter.", img:"assets/img/bowl.png", step:"Step 2 · Mix it!", tAr:"رائع! ماذا يجب أن أضيف أولًا؟", sAr:"يجب أن تضيف الدقيق والزبدة.", stepAr:"الخطوة ٢ · اخلط!"},
+  {t:"Should I use a lot of sugar?", s:"No! We should not use too much sugar. We had better use honey!", img:"assets/img/honey.png", step:"Step 3 · Sweet idea!", tAr:"هل أستخدم الكثير من السكر؟", sAr:"لا! لا ينبغي أن نستخدم الكثير من السكر. من الأفضل أن نستخدم العسل!", stepAr:"الخطوة ٣ · فكرة حلوة!"},
+  {t:"The oven is cold. What should we do?", s:"We had better preheat the oven first.", img:"assets/img/oven.png", step:"Step 4 · Into the oven!", tAr:"الفرن بارد. ماذا يجب أن نفعل؟", sAr:"من الأفضل أن نسخّن الفرن أولًا.", stepAr:"الخطوة ٤ · إلى الفرن!"},
+  {t:"The cookies are ready! They smell great!", s:"Yay! We should share the cookies with my family!", img:"assets/img/cookies.png", step:"Step 5 · Cookies ready!", tAr:"البسكويت جاهز! رائحته رائعة!", sAr:"ياي! يجب أن نشارك البسكويت مع عائلتي!", stepAr:"الخطوة ٥ · البسكويت جاهز!"}
 ];
 const QUIZ = [
   {q:"ما معنى كلمة «عسل»؟", en:false, hint:"اختر الكلمة الإنجليزية الصحيحة", opts:["sugar","honey","butter"], a:1},
@@ -650,16 +696,75 @@ function fit(){
 }
 window.addEventListener("resize", fit); fit();
 
-/* 英语发音（浏览器原生英文语音） */
+/* 英语发音：优先播放预生成童声音频，缺失时回退浏览器语音 */
+const TTS = {
+  "أهلًا بك في مطبخ المرح، يا طاهيّنا الصغير!": "assets/audio/tts/hello-ar.mp3",
+  "What's your name?": "assets/audio/tts/whats-your-name.mp3",
+  "My name is ...": "assets/audio/tts/my-name-is.mp3",
+  "How are you today?": "assets/audio/tts/how-are-you-today.mp3",
+  "I'm great! I'm ready to cook!": "assets/audio/tts/im-great-ready-to-cook.mp3",
+  "What's your favorite food?": "assets/audio/tts/whats-your-favorite-food.mp3",
+  "My favorite food is pizza.": "assets/audio/tts/my-favorite-food-is-pizza.mp3",
+  "What's in your favorite food?": "assets/audio/tts/whats-in-your-favorite-food.mp3",
+  "flour": "assets/audio/tts/flour.mp3",
+  "butter": "assets/audio/tts/butter.mp3",
+  "sugar": "assets/audio/tts/sugar.mp3",
+  "honey": "assets/audio/tts/honey.mp3",
+  "chocolate": "assets/audio/tts/chocolate.mp3",
+  "yogurt": "assets/audio/tts/yogurt.mp3",
+  "topping": "assets/audio/tts/topping.mp3",
+  "recipe": "assets/audio/tts/recipe.mp3",
+  "We need flour to make cookies.": "assets/audio/tts/we-need-flour.mp3",
+  "Butter makes the cookies soft.": "assets/audio/tts/butter-makes-cookies-soft.mp3",
+  "You should not use too much sugar.": "assets/audio/tts/no-too-much-sugar.mp3",
+  "Honey is sweet and yummy.": "assets/audio/tts/honey-is-sweet.mp3",
+  "I like chocolate in my cookies.": "assets/audio/tts/i-like-chocolate.mp3",
+  "Yogurt with banana is my favorite topping.": "assets/audio/tts/yogurt-banana-topping.mp3",
+  "The topping is on the pancakes.": "assets/audio/tts/topping-on-pancakes.mp3",
+  "Follow the recipe step by step.": "assets/audio/tts/follow-the-recipe.mp3",
+  "We should turn the oven on.": "assets/audio/tts/turn-oven-on.mp3",
+  "Should I use flour in the mixture?": "assets/audio/tts/should-i-use-flour.mp3",
+  "We had better check the recipe again.": "assets/audio/tts/check-recipe-again.mp3",
+  "You had better not leave the cookies in the oven too long!": "assets/audio/tts/dont-leave-cookies.mp3",
+  "You had better not make a mess!": "assets/audio/tts/dont-make-mess.mp3",
+  "You had better wash your hands.": "assets/audio/tts/wash-your-hands.mp3",
+  "We should get our ingredients ready first.": "assets/audio/tts/ingredients-ready.mp3",
+  "Should I add the honey? Yes, you should!": "assets/audio/tts/should-i-add-honey.mp3",
+  "Should I eat all the cookies now? No, you shouldn't!": "assets/audio/tts/should-i-eat-cookies.mp3",
+  "Welcome, little chef! Should we make cookies today?": "assets/audio/tts/rp-t1.mp3",
+  "Yes, we should!": "assets/audio/tts/rp-s1.mp3",
+  "Great! What should I add first?": "assets/audio/tts/rp-t2.mp3",
+  "You should add the flour and the butter.": "assets/audio/tts/rp-s2.mp3",
+  "Should I use a lot of sugar?": "assets/audio/tts/rp-t3.mp3",
+  "No! We should not use too much sugar. We had better use honey!": "assets/audio/tts/rp-s3.mp3",
+  "The oven is cold. What should we do?": "assets/audio/tts/rp-t4.mp3",
+  "We had better preheat the oven first.": "assets/audio/tts/rp-s4.mp3",
+  "The cookies are ready! They smell great!": "assets/audio/tts/rp-t5.mp3",
+  "Yay! We should share the cookies with my family!": "assets/audio/tts/rp-s5.mp3",
+};
 let VOICES = [];
 function loadVoices(){ VOICES = speechSynthesis.getVoices(); }
 if("speechSynthesis" in window){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+let curAudio = null;
 function speak(text, rate){
+  const f = TTS[text];
+  if(f){
+    try{
+      if(curAudio){ curAudio.pause(); curAudio = null; }
+      if("speechSynthesis" in window) speechSynthesis.cancel();
+      const a = new Audio(f);
+      a.playbackRate = (rate && rate < .75) ? .85 : 1;
+      curAudio = a;
+      a.play().catch(()=>{ curAudio = null; });
+      return;
+    }catch(e){}
+  }
   if(!("speechSynthesis" in window)) return;
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
-  u.lang = "en-US"; u.rate = rate || 0.82; u.pitch = 1.05;
+  u.lang = "en-US"; u.rate = rate || 0.82; u.pitch = 1.45;
   const v = VOICES.find(v=>/en[-_]US/i.test(v.lang)&&/google/i.test(v.name))
+        || VOICES.find(v=>/^en/i.test(v.lang)&&/female|samantha|zira|aria|jenny|tessa/i.test(v.name))
         || VOICES.find(v=>/en[-_]US/i.test(v.lang))
         || VOICES.find(v=>/^en/i.test(v.lang));
   if(v) u.voice = v;
@@ -709,6 +814,21 @@ function showPage(i){
 $("prevBtn").addEventListener("click", ()=>showPage(cur-1));
 $("nextBtn").addEventListener("click", ()=>showPage(cur+1));
 $("startBtn").addEventListener("click", ()=>{ sfx("correct"); showPage(1); });
+
+/* 课前试音 + 首次点按解锁音频自动播放限制 */
+function unlockAudio(){
+  try{
+    const a = new Audio("assets/audio/correct.mp3"); a.volume = 0.01;
+    const p = a.play(); if(p && p.then){ p.then(()=>a.pause()).catch(()=>{}); }
+  }catch(e){}
+  document.removeEventListener("pointerdown", unlockAudio);
+}
+document.addEventListener("pointerdown", unlockAudio);
+$("sndTest").addEventListener("click", ()=>{
+  unlockAudio();
+  try{ const a = new Audio("assets/audio/correct.mp3"); a.volume = .9; a.play().catch(()=>{}); }catch(e){}
+  const b = $("sndOk"); b.style.opacity = "1"; setTimeout(()=>b.style.opacity = "0", 1600);
+});
 document.addEventListener("keydown", e=>{
   if(e.target.tagName==="TEXTAREA") return;
   if(e.key==="ArrowRight") showPage(cur+1);
@@ -719,8 +839,14 @@ document.addEventListener("keydown", e=>{
 $("chefIce").addEventListener("click", ()=>{
   const c = $("chefIce");
   c.classList.remove("waving"); void c.offsetWidth; c.classList.add("waving");
-  speak("Hello, little chef! Welcome to my kitchen!", .9);
+  speak("أهلًا بك في مطبخ المرح، يا طاهيّنا الصغير!", .9);
 });
+/* 进入破冰页自动挥手 + 打招呼（P1 开始按钮的点击已解锁音频） */
+enterHooks[2] = ()=>{
+  const c = $("chefIce");
+  c.classList.remove("waving"); void c.offsetWidth; c.classList.add("waving");
+  setTimeout(()=>speak("أهلًا بك في مطبخ المرح، يا طاهيّنا الصغير!", .9), 350);
+};
 
 /* ================= 单词页渲染 ================= */
 document.querySelectorAll(".word-page").forEach(sec=>{
@@ -738,7 +864,7 @@ document.querySelectorAll(".word-page").forEach(sec=>{
         <div class="wp-ph">${w.ph}</div>
         <div class="wp-ar">${w.ar}</div>
         <div class="wp-ex">
-          <p>${w.ex}</p>
+          <div class="wp-ex-text"><p>${w.ex}</p><p class="ar-t ex-ar">${w.exAr}</p></div>
           <button class="speak-btn wp-exspeak" data-w="${w.ex}"><i class="spk"></i>Listen</button>
         </div>
       </div>
@@ -910,6 +1036,9 @@ function renderRP(){
   $("rpStepWord").textContent = st.step + "  ("+(rpIdx+1)+" / 5)";
   $("rpTeacher").textContent = st.t;
   $("rpStudent").textContent = st.s;
+  $("rpTeacherAr").textContent = st.tAr;
+  $("rpStudentAr").textContent = st.sAr;
+  $("rpStepWordAr").textContent = st.stepAr;
   $("rpTListen").onclick = ()=>speak(st.t,.85);
   $("rpSListen").onclick = ()=>speak(st.s,.62);
   [...$("rpProg").children].forEach((el,i)=>el.classList.toggle("on", i<=rpIdx));
@@ -998,6 +1127,10 @@ try{
     if(fbRating) $("fbStars").innerHTML = Array.from({length:5},(_,i)=>`<span class="${i<fbRating?"on":""}">★</span>`).join("");
   }
 }catch(e){}
+
+/* ================= 阿语全翻译开关（默认关闭，不记忆） ================= */
+$("arBtn").addEventListener("click", ()=>{ document.body.classList.toggle("ar-on"); });
+if(location.hash.indexOf("ar") > -1) document.body.classList.add("ar-on");
 
 /* 启动（支持 #p=N 直达页面） */
 const hashM = location.hash.match(/p=(\d+)/);
